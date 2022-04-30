@@ -1,0 +1,12 @@
+function percentbar ($atts, $content = null) {
+			extract(shortcode_atts(array(
+				'percentage' => '',
+				'percentage_number'=>'',
+				'percentage_title'=>'',
+				), $atts));
+				
+		return '<p class="num-progressbar">'.$percentage_number.'</p> <div class="progressbar-area">
+		<span class="percentage-area" style="width:' . ($percentage) . '%"></span>
+		</div>';
+		}
+add_shortcode ("percentbar", "percentbar");

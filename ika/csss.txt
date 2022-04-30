@@ -1,0 +1,93 @@
+.product-category-area{
+    display: flex;
+    margin-bottom: 70px;
+    flex-wrap: wrap;
+}
+.category-product-area{
+    width:24%;
+    margin-right: 1%;
+    padding: 40px;
+    padding-top: 40px;
+    background: #F9EFE0;
+    text-align: center;
+    margin-bottom: 12px
+    
+}
+
+.category-pd-title-area a{
+    
+    font-family: Yeseva One;
+    font-size: 12.84px;
+    line-height: 15px;
+    text-transform: uppercase;
+    color: #676D53;
+}
+.category-pd-title-area{
+    padding-bottom: 15px;
+}
+.category-pd-description-area{
+    font-size: 12px;
+    line-height: 16px;
+    color: #000000;
+    padding-top: 15px;
+    font-weight: 500;
+    padding-bottom: 30px;
+}
+.category-link-btn{
+    background: #4F5441;
+    padding: 15px;
+    color:#EBE7DF;
+}
+.category-link-btn:hover{
+    color:#EBE7DF;
+}
+
+@media only screen and (max-width: 600px){
+
+
+.woo-pd-category:first-child {
+    width: 100% !important;
+    padding-bottom: 60px;
+}
+.category-product-area {
+        width: 49%;
+    margin-right: 1%;
+    padding:40px 15px;
+}
+
+}
+
+
+.woo-pd-category:first-child{
+    display: block;
+    width: 24%;
+    align-items: center;
+	  background: url("https://dev-eco-export-services.pantheonsite.io/wp-content/uploads/2022/01/cat-leaf-bg01.png") no-repeat;
+	background-size: cover;
+	padding-left:30px;
+	padding-right:30px;
+	margin-right: 1%;
+	margin-bottom:12px
+}
+
+.woo-pd-category{
+display:none	
+}
+.woo-pd-category .cate-name{
+	padding-top:60%;
+	font-size: 26px;
+	line-height: 33px;
+	color: #FFFFFF;
+	padding-bottom:10px
+}
+
+.woo-pd-category .cate-des{
+	font-weight: 300;
+font-size: 13px;
+line-height: 19px;
+color: #FFFFFF;
+}
+
+
+
+

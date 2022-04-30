@@ -1,0 +1,289 @@
+<?php 
+add_action( 'wp_enqueue_scripts', 'enqueue_child_theme_styles');
+function enqueue_child_theme_styles() {
+  wp_enqueue_style( 'Parents_theme_style', get_template_directory_uri().'/style.css' );
+}
+
+add_filter( 'site_transient_update_plugins', 'remove_update_notifications' );
+function remove_update_notifications( $value ) {
+
+    if ( isset( $value ) && is_object( $value ) ) {
+        unset( $value->response[ 'elementor-pro/elementor-pro.php' ] );
+    }
+
+    return $value;
+}
+add_action( 'wp_footer', 'set_default_language');
+function set_default_language () {
+	?>
+	<script type="text/javascript">
+		
+	</script>
+<?php 
+}
+add_shortcode('blog-post-area','blog_post_shortcode_area');
+function blog_post_shortcode_area($atts){
+	ob_start();
+    $args = array(  
+        'post_type' => 'post',
+        'post_status' => 'publish',
+        'posts_per_page' => 5,
+		'orderby'=>'title',
+		'order'=>'ASC'
+    );
+    $post_area = new WP_Query( $args );
+
+	while( $post_area->have_posts() ) : $post_area->the_post();
+?>
+<div class="main-blog-area">
+	<div class="blog-area-content">
+		<?php the_post_thumbnail(); ?>
+	</div>
+	<div class="blog-area-content blog-con-area2">
+		 <h3 class="blog-title-area"><?php the_title(); ?></h3>
+		<p class="blog-des-area"><?php echo wp_trim_words( get_the_content(), 1); ?></p>
+		<div class="blog-meta-data">
+			<div class="meta-data-content">
+				<div class="blog-meta-date">
+					<span><?php echo get_the_date(); ?></span>
+				</div>
+			</div>
+			<div class="meta-data-content">
+				<div class="blog-meta-tag">
+					<span><?php custom_post_tag_link(); ?></span>
+				</div>
+			</div>
+		</div>
+		 
+		<div class="post-footer-area">
+			<div class="post-readmore-area">
+				<a class="read_more_btn" href="<?php the_permalink(); ?>">Read More</a>
+			</div>
+			<div class="post-readmore-area post-category-area">
+				<?php
+					$category = get_the_category();
+					if ( $category[0] ) {
+					echo '<a href="' . get_category_link( $category[0]->term_id ) . '">' . $category[0]->cat_name . '</a>';
+					} 
+				?>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<?php endwhile; ?>
+
+
+
+<?php
+	return ob_get_clean();
+}
+
+
+function custom_post_tag_link()
+{
+    if ( $posttags = get_the_tags() ) 
+    {
+        $tag = current( $posttags );
+        printf(
+            '<a href="%1$s" itemprop="url"><span itemprop="title">%2$s</span></a>',
+            get_tag_link( $tag->term_id ),
+            esc_html( $tag->name )
+         );
+    }
+}
+
+
+
+add_shortcode('blog-post-area-archive','blog_post_shortcode_area_archive');
+function blog_post_shortcode_area_archive(){
+	ob_start();
+?>
+<?php
+	while( have_posts() ) : the_post();
+?>
+<div class="main-blog-area">
+	<div class="blog-area-content">
+		<?php the_post_thumbnail(); ?>
+	</div>
+	<div class="blog-area-content blog-con-area2">
+		 <h3 class="blog-title-area"><?php the_title(); ?></h3>
+		<p class="blog-des-area"><?php echo wp_trim_words( get_the_content(), 1); ?></p>
+		<div class="blog-meta-data">
+			<div class="meta-data-content">
+				<div class="blog-meta-date">
+					<span><?php echo get_the_date(); ?></span>
+				</div>
+			</div>
+			<div class="meta-data-content">
+				<div class="blog-meta-tag">
+					
+					<span><?php custom_post_tag_link(); ?></span>
+				</div>
+			</div>
+		</div>
+		 
+		<div class="post-footer-area">
+			<div class="post-readmore-area">
+				<a class="read_more_btn" href="<?php the_permalink(); ?>">Read More</a>
+			</div>
+			<div class="post-readmore-area post-category-area">
+				<?php
+					$category = get_the_category();
+					if ( $category[0] ) {
+					echo '<a href="' . get_category_link( $category[0]->term_id ) . '">' . $category[0]->cat_name . '</a>';
+					} 
+				?>
+			</div>
+
+		</div>
+	
+	</div>
+</div>
+
+<?php endwhile; ?>
+
+<?php
+	return ob_get_clean();
+}
+
+
+
+
+add_shortcode('resource-post-area','resource_post_shortcode_area');
+function resource_post_shortcode_area(){
+	ob_start();
+    $args = array(  
+        'post_type' => 'resource',
+        'post_status' => 'publish',
+        'posts_per_page' => 5,
+		'orderby'=>'title',
+		'order'=>'ASC'
+    );
+
+   $post_area = new WP_Query( $args ); 
+
+	while( $post_area->have_posts() ) : $post_area->the_post();
+?>
+<div class="main-blog-area">
+	<div class="blog-area-content">
+		<?php the_post_thumbnail(); ?>
+	</div>
+	<div class="blog-area-content blog-con-area2">
+		 <h3 class="blog-title-area"><?php the_title(); ?></h3>
+		<p class="blog-des-area"><?php echo wp_trim_words( get_the_content(), 1); ?></p>
+		<div class="blog-meta-data">
+			<div class="meta-data-content">
+				<div class="blog-meta-date">
+					<span><?php echo get_the_date(); ?></span>
+				</div>
+			</div>
+			<div class="meta-data-content">
+				<div class="blog-meta-tag resource-tag-area">
+					
+					<span><?php 
+					  $category = get_the_terms( $post->ID, 'resource_tag' );
+					  //get First Category
+					  $firstCategory = $category[0];
+					  //get category link
+						$category_link = get_category_link($firstCategory->term_id);
+						echo '<a href="' . $category_link . '">' . $firstCategory->name . '</a>';
+					?></span>
+				</div>
+			</div>
+		</div>
+		 <div class="post-footer-area">
+			<div class="post-readmore-area">
+				<a class="read_more_btn" href="<?php the_permalink(); ?>">Read More</a>
+			</div>
+		     <div class="post-readmore-area post-category-area">
+				<?php 
+				  $category = get_the_terms( $post->ID, 'resource_taxonomy' );
+				  //get First Category
+				  $firstCategory = $category[0];
+				  //get category link
+					$category_link = get_category_link($firstCategory->term_id);
+					echo '<a href="' . $category_link . '">' . $firstCategory->name . '</a>';
+				?>
+			</div>	
+		</div>
+	</div>
+</div>
+
+<?php endwhile; ?>
+
+
+
+<?php
+	return ob_get_clean();
+}
+
+
+add_shortcode('resource-post-area-archive','resource_post_shortcode_area_archive');
+function resource_post_shortcode_area_archive(){
+	ob_start();
+?>
+<?php
+	while( have_posts() ) : the_post();
+?>
+<div class="main-blog-area">
+	<div class="blog-area-content">
+		<?php the_post_thumbnail(); ?>
+	</div>
+	<div class="blog-area-content blog-con-area2">
+		 <h3 class="blog-title-area"><?php the_title(); ?></h3>
+		<p class="blog-des-area"><?php echo wp_trim_words( get_the_content(), 1); ?></p>
+		<div class="blog-meta-data">
+			<div class="meta-data-content">
+				<div class="blog-meta-date">
+					<span><?php echo get_the_date(); ?></span>
+				</div>
+			</div>
+			<div class="meta-data-content">
+				<div class="blog-meta-tag resource-tag-area">
+					
+					<span><?php 
+					  $category = get_the_terms( $post->ID, 'resource_tag' );
+					  //get First Category
+					  $firstCategory = $category[0];
+					  //get category link
+						$category_link = get_category_link($firstCategory->term_id);
+						echo '<a href="' . $category_link . '">' . $firstCategory->name . '</a>';
+					?></span>
+					
+				</div>
+			</div>
+		</div>
+		 
+		<div class="post-footer-area">
+			<div class="post-readmore-area">
+				<a class="read_more_btn" href="<?php the_permalink(); ?>">Read More</a>
+			</div>
+			<div class="post-readmore-area post-category-area">
+				<?php 
+				  $category = get_the_terms( $post->ID, 'resource_taxonomy' );
+				  //get First Category
+				  $firstCategory = $category[0];
+				  //get category link
+					$category_link = get_category_link($firstCategory->term_id);
+					echo '<a href="' . $category_link . '">' . $firstCategory->name . '</a>';
+				?>
+			</div>
+
+		</div>
+	
+	</div>
+</div>
+
+<?php endwhile; ?>
+
+<?php
+	return ob_get_clean();
+}
+
+
+
+
+
+

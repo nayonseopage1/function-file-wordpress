@@ -1,0 +1,103 @@
+
+<div class="search-icon">
+<i id="fa-search" class="fa fa-search"></i>
+<i id="fa-times" class="fa fa-times"></i>
+</div>
+
+
+
+<?php 
+function shapeSpace_display_search_form() {
+	return get_search_form(false);
+}
+add_shortcode('display_search_form', 'shapeSpace_display_search_form');
+
+
+function faq_toggle_myscript() {
+?>
+<script>
+jQuery(document).ready(function(){
+    jQuery('.faqreadmore').on('click', function(event) {        
+        if (jQuery("#faqcontent").height() <= 250) {
+            jQuery("#faqcontent").animate(
+                {height: "300px"});
+            jQuery('#faqhidden').show();
+			jQuery('.faqreadmore').hide();
+       } 
+        else {
+            jQuery("#faqcontent").animate({height: "250px"});
+            jQuery('#faqhidden').hide();
+       }
+    });
+	    jQuery('.faqreadmore2').on('click', function(event) {        
+        if (jQuery("#faqcontent2").height() <= 200) {
+            jQuery("#faqcontent2").animate(
+                {height: "250px"});
+            jQuery('#faqhidden2').show();
+			jQuery('.faqreadmore2').hide();
+       } 
+        else {
+            jQuery("#faqcontent2").animate({height: "100px"});
+            jQuery('#faqhidden2').hide();
+       }
+    });
+	
+});
+</script>
+<?php
+}
+add_action('wp_footer', 'faq_toggle_myscript');
+
+
+// Add custom script
+add_action('wp_head', 'cb_custom_script2');
+  function cb_custom_script2(){
+    ?>    
+    <style>	
+		/*search box slide*/
+		.search-folm-area {
+			display: none;
+		}
+		.search-folm-area.toggle {
+			display: block;
+		}
+		.search-icon .fa-search.toggle {
+   		 	display: none;
+		} 
+		.search-icon .fa-times {
+			display: none;
+		}
+		.search-icon .fa-search.toggle {
+			color: #88ab2e;	
+		}
+		.search-icon .fa-times.toggle {
+   		 	display: block !important;
+			 opacity: 1;
+			  color: #88ab2e;
+			font-size:28px
+		} 
+		
+		
+	</style>
+	<script>
+		(function($){
+			$(document).ready(function ($) {
+
+			  $(".search-icon").click(function(){
+			    $(".search-folm-area" ).slideToggle( "toggle");
+			    $("#fa-search" ).toggleClass( "toggle");
+			    $("#fa-times" ).toggleClass( "toggle");
+			  });
+		    });
+			
+			$( window ).load(function() {
+				$(".slick-current + .slick-active").addClass( "slick-center");
+				$(".slick-arrow").click(function(){				
+					$(".slick-current + .slick-active").addClass( "slick-center");
+				});
+			});
+			
+		})(jQuery);
+	</script>
+	<?php 
+ }

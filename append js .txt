@@ -1,0 +1,1 @@
+ $('#sbi_images > .sbi_item.sbi_type_image:last-child a').append('<div class="instagram-overlay"><div class="icon"></div>follow us at @designcollectionsg</div>');  

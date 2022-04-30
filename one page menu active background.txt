@@ -1,0 +1,17 @@
+function category_toggle_myscript() {
+?>
+<script>
+jQuery(document).ready(function(){
+	jQuery(function($){
+		
+		  $(".menu-item a").click(function() {
+			$(".menu-item a").removeClass("active-anchor");
+			$(this).addClass("active-anchor");
+		  });
+		
+	});
+});
+</script>
+<?php
+}
+add_action('wp_footer', 'category_toggle_myscript');

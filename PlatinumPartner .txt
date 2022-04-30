@@ -1,0 +1,4 @@
+PlatinumPartner wp access:
+
+Username: ppadmin
+Password: Digital@2020!

@@ -1,0 +1,88 @@
+<?php 
+add_action( 'wp_enqueue_scripts', 'enqueue_child_theme_styles');
+function enqueue_child_theme_styles() {
+  wp_enqueue_style( 'Parents_theme_style', get_template_directory_uri().'/style.css' );
+}
+
+add_filter( 'site_transient_update_plugins', 'remove_update_notifications' );
+function remove_update_notifications( $value ) {
+
+    if ( isset( $value ) && is_object( $value ) ) {
+        unset( $value->response[ 'elementor-pro/elementor-pro.php' ] );
+    }
+
+    return $value;
+}
+add_action( 'wp_footer', 'set_default_language');
+function set_default_language () {
+	?>
+	<script type="text/javascript">
+		(function($){
+
+			jQuery(document).ready(function($){
+
+				doGTranslate('en|zh-CN');
+				//$(".latest-news .post-cat a").removeAttr("href");
+			});
+
+		})(jQuery);
+	</script>
+<?php 
+}
+
+add_shortcode('blog-post-area','blog_post_shortcode_area');
+function blog_post_shortcode_area(){
+	ob_start();
+?>
+<?php $post_area = new wp_Query(array(
+		'post_type'=>'post',
+		'posts_per_page'=>-1
+	));
+	while( $post_area->have_posts() ) : $post_area->the_post();
+?>
+<div class="main-blog-area">
+	<div class="blog-area-content">
+		<?php the_post_thumbnail(); ?>
+	</div>
+	<div class="blog-area-content blog-con-area2">
+		 <h3 class="blog-title-area"><?php the_title(); ?></h3>
+		<p class="blog-des-area"><?php echo wp_trim_words( get_the_content(), 1); ?></p>
+		<div class="blog-meta-data">
+			<div class="meta-data-content">
+				<div class="blog-meta-date">
+					<span><?php echo get_the_date(); ?></span>
+				</div>
+			</div>
+			<div class="meta-data-content">
+				<div class="blog-meta-tag">
+					
+					<span><?php $allposttags = get_the_tags();
+					$i=0;
+					if ($allposttags) {
+                    foreach($allposttags as $tags) {
+                        $i++;
+                        if (1 == $i) {
+                           echo $firsttag = $tags->name;
+                        }
+                    }
+                }?></span>
+				</div>
+			</div>
+		</div>
+		 
+		<a class="read_more_btn" href="<?php the_permalink(); ?>">Read More</a>
+	</div>
+</div>
+
+<?php endwhile; ?>
+
+
+
+<?php
+	return ob_get_clean();
+}
+
+
+
+
+

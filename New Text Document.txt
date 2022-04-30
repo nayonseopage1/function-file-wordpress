@@ -1,0 +1,362 @@
+/*Style for FAQ */
+
+@media (min-width:1150px){
+	nav#top-menu-nav{margin-left:-7%}
+}
+
+.postid-33459 #left-area .et_post_meta_wrapper img{ display:none;}
+.postid-33459 .et_pb_post .entry-content{ padding-top:0;}
+
+.faq-title {
+    color: black;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 20px;
+    font-weight: 700;
+		padding-left: 20px;
+		padding-right: 35px;
+  }
+  
+  /* .active, .faq-title:hover {
+    background-color: rgb(255, 255, 255);
+  } */
+
+b.faq-title.active, b.faq-title {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+  .content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+  }
+
+.faq-item {
+    border: 1px solid #d9d9d9;
+    margin: -6px 0px;
+    background: #ffffffd1;
+    /* padding: 10px;*/
+}
+b.faq-title:before {
+	   position: absolute;
+    /* content: "+"; */
+    top: 50%;
+    right: 17px;
+    margin-top: -.5em;
+    /* background: #ffffff; */
+    border-radius: 50%;
+    line-height: 22px;
+    /* width: 20px; */
+    /* height: 20px; */
+    /* color: #fff; */
+    /* text-align: center; */
+    font-family: ETmodules!important;
+    content: "\e050";
+    color: #cea048;
+    font-size: 18px;
+}
+
+b.faq-title.active:before {
+  content: "\e04f";
+}
+
+.project-area{
+	display:flex;
+	flex-wrap: wrap;
+}
+.project-area .project-taxonomy-area{
+	width: 33.33%;
+  margin-top: 40px;
+  text-align: center;
+}
+.project-area .project-taxonomy-area a p {
+		margin-top: 30px;
+    font-size: 11px;
+    font-weight: 700;
+		letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.taxonomy-post-sec {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+h2.tx-slug {
+    text-align: center;
+    text-transform: capitalize;
+    font-size: 48px;
+    font-weight: 300;
+		    padding-top: 40px;
+}
+p.tx-button a {
+    text-align: center;
+    background-color: #cea048;
+    color: #fff;
+		padding: 12px;
+    letter-spacing: 0.15em;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+		border-radius: 4px;
+}
+p.tx-button {
+    margin-top: 40px;
+    text-align: center;
+}
+.wsite-multicol-col {
+		width: 50%;
+    padding: 20px;
+    color: #fff;
+}
+.project-single-content tr.wsite-multicol-tr {
+    margin-top: -100px;
+}
+.project-single-content h2 {
+    font-weight: 300;
+    line-height: 1.75;
+    letter-spacing: 0.02em;
+    padding-top: 20px;
+		text-align: center;
+		color: #fff;
+		background-color: #3996B8;
+}
+table.custom {
+    background-color: #3996b8;
+    width: 100%;
+		margin-bottom: 60px;
+}
+.custom td.wsite-multicol-col {
+    font-weight: 300;
+    font-size: 15px;
+}
+td.wsite-multicol-col .paragraph {
+    color: #000;
+}
+.taxonomy-post-sec{
+	display:flex;
+	flex-wrap: wrap;
+	padding-top:20px;
+
+}
+.taxonomy-post-area{
+	width:45%;
+	 margin-right: 3%;
+	margin-bottom:50px;
+	margin-top:20px;
+	
+}
+
+.banner-wrap{
+	height:80vh;
+	justify-content: center;
+  align-items: center;
+  display: flex;
+	background: linear-gradient(
+180deg, #0062a4 0%, #ffffff 100%);
+}
+.google-map {
+    margin-top: 20px;
+}
+.projet-post-title{
+		font-size:48px;
+		color:white;
+		margin-top: -50px;
+	text-align:center
+}
+.city-name{
+	font-size:24px !important
+}
+.progect-main-area{
+	display:flex;
+}
+.project-single-content{
+	width:48%;
+	margin-right:2%
+}
+.property-flyerpdf-area{
+	display:flex
+}
+.property-flyer-pdf{
+	width:48%;
+	margin-right:2%
+}
+.property-flyer-pdf h5{
+	font-size:17px
+}
+.pdf-content-pad p{
+	font-size:14px
+}
+
+.pdf-download-area{
+	display:flex;
+	padding-top:10px
+}
+.pdf-content-pad{
+	padding-left:20px
+}
+.property-excerpt{
+	padding-top:30px
+}
+.property-contact-area{
+	display:flex;
+	padding-right:20px;
+	padding-top:40px;
+	flex-wrap: wrap
+}
+.property-contact-content{
+	width:50%;
+}
+.email-property-pad{
+	padding-left:30px
+}
+.property-contact-content p{
+	font-size:15px;
+	    margin-bottom: 20px;
+}
+.property-con-btn{
+    padding: 6px 25px;
+    background: #000;
+    color: white;
+}
+.owl-carousel .owl-prev{
+    font-size: 60px !important;
+    position: absolute !important;
+    top: 45% !important;
+    left: 0 !important;
+    color: #D9AD4F !important;
+	    margin-left: 15px;
+}
+
+.owl-carousel .owl-next{
+	font-size:60px !important;
+	    position: absolute !important;
+    top: 45% !important;
+    right: 0 !important;
+	color:#D9AD4F !important;
+	    margin-right: 15px;
+}
+
+@media (max-width:768px){
+	.banner-wrap {
+    height: 40vh;
+    padding: 10px;
+    text-align: center;
+	}
+	.banner-wrap h4 {
+		font-size:32px;
+	}
+	.progect-main-area {
+    flex-direction: column;
+    width: 100%;
+	}
+	.project-single-content {
+    flex-direction: column;
+    width: 100%;
+	}
+	.project-area .project-taxonomy-area {
+    width: 100%;
+		margin-right:0;
+}
+	.wsite-multicol-col {
+    padding: 10px;
+}
+	.pdf-content-pad p {
+    display: none;
+}
+	.property-contact-area {
+    padding-right: 0;
+}
+	.property-contact-content {
+    width: 100%;
+    padding-bottom: 20px;
+}
+	.email-property-pad {
+    padding-left: 0;
+}
+	.custom td.wsite-multicol-col {
+    font-size: 13px;
+}
+}
+
+/* 
+ * ///// Related Post ON ///// 
+ */
+ 
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+    align-content: space-around;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-item {
+    width: 32% !important;
+    display: block;
+    align-items: center;
+    margin: 13px 0;
+		margin-bottom: 60px;
+}
+
+.info-box {
+    border: 2px solid #f6f6f6;
+    padding: 10px 8px;
+}
+
+.info-box p {
+    color: #676767;
+}
+
+.info-box a {
+    color: #cea048;
+}
+
+.post-item .feture-image img {
+    width: 100%;
+}
+
+.feture-image img {
+    height: 250px;
+}
+
+h2.related-title {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+		font-family: 'Oswald',Helvetica,Arial,Lucida,sans-serif;
+}
+
+h2.related-title:after {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 80px;
+    height: 2px;
+    content: "";
+    background: #cea048;
+    right: 0;
+    margin: 0 auto;
+}
+
+/* Mobile Layout 320px */
+@media only screen and (max-width:767px){ 
+    .post-item {
+       width: 100% !important;
+			 margin-bottom: 25px;
+   }
+}
+
+
+

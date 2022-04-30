@@ -1,0 +1,119 @@
+function category_toggle_myscript() {
+?>
+<script>
+jQuery(document).ready(function(){
+	jQuery(function($){
+		
+		$( "<div class='woo-cat-toggle'></div>" ).insertAfter( "#sidebar .widget_product_categories .product-categories > .cat-item.cat-parent > a" );
+		
+		$( "#sidebar .widget_product_categories .product-categories .woo-cat-toggle" ).click(function () {
+			$(this).toggleClass("cat-popped");
+		});
+		
+		$('#sidebar .widget_product_categories .product-categories > .cat-item.cat-parent').each(function(){
+			if($(this).is('.current-cat, .current-cat-parent')) {
+				$(this).children('.woo-cat-toggle').toggleClass("cat-popped");
+			} 
+		});
+	});
+});
+</script>
+<?php
+}
+add_action('wp_footer', 'category_toggle_myscript');
+
+
+
+#sidebar id dite hobe 
+
+#sidebar .widget_product_categories ul.product-categories > li.cat-parent {
+	position: relative;	
+}
+
+#sidebar .widget_product_categories ul.product-categories > li.cat-parent .woo-cat-toggle {
+	cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	margin-left: 0.5em;
+	width: 1.5em;
+	line-height: 1em;
+	-webkit-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+	transition: all 0.4s ease;
+	width: 20px;
+	height: 20px;
+	text-align: center;
+	line-height: 20px;
+	border-radius: 50%;
+	position: absolute;
+    right: 25px;
+}
+
+#sidebar .widget_product_categories ul.product-categories > li.cat-parent .woo-cat-toggle.cat-popped {
+-webkit-transform: rotate(0deg);
+	transform: rotate(0deg);
+	color: #000;
+}
+
+#sidebar .widget_product_categories ul.product-categories > li.cat-parent .woo-cat-toggle::before {
+	font-weight: normal;
+	font-style: normal;
+	font-size: 24px;
+	text-transform: none;
+	speak: none;
+	content: '+';
+	line-height: 20px;
+	width: 20px;
+	height: 20px;
+	text-align: center;
+}
+
+#sidebar .widget_product_categories ul.product-categories > li.cat-parent .woo-cat-toggle.cat-popped::before {
+	content: '\-';
+}
+
+#sidebar .widget_product_categories ul.product-categories > li.cat-parent .woo-cat-toggle ~ ul.children {
+	overflow: hidden;
+	max-height: 0;
+	transition: all 0.4s ease;
+	 padding: 0px !important;
+    margin-left: 10px !important;
+}
+
+#sidebar .widget_product_categories ul.product-categories > li.cat-parent .woo-cat-toggle.cat-popped ~ ul.children {
+	max-height: 300px;
+	padding-top: 10px !important;
+}
+
+
+#sidebar ul.product-categories>li{
+    list-style: none;
+    padding-bottom: 10px;
+}
+#sidebar ul.product-categories > li ul li {
+    list-style: none;
+    
+}
+#sidebar .product-categories .cat-item a{
+    text-transform: capitalize;
+    color:#000;
+    font-size: 16px;
+}
+#sidebar ul.product-categories > li ul li a {
+font-size: 14px !important;
+}
+#sidebar .product-categories{
+    margin-left: 0;
+    padding-top: 16px;
+}
+
+#sidebar ul.product-categories > li ul li.current-cat a{
+   color:#003263;
+}
+.widget_product_categories h5{
+
+    font-weight: 700;
+    font-size: 22px;
+}
+
+

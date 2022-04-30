@@ -1,0 +1,61 @@
+<?php
+
+function child_enqueue_styles() {
+
+	wp_enqueue_style( 'astra-child-theme-css', get_stylesheet_directory_uri() . '/style.css', array('astra-theme-css'), CHILD_THEME_ASTRA_CHILD_VERSION, 'all' );
+
+}
+
+add_action( 'wp_enqueue_scripts', 'child_enqueue_styles', 15 );
+
+// Add content to custom tab in product single pages (1)
+add_shortcode('display_product_ingredients', 'ingredients_product_tab_content');
+function ingredients_product_tab_content() { ?>
+
+        <?php echo get_field( "ingredients", $post->ID ); ?>
+
+<?php
+}
+
+// Add content to custom tab in product single pages (1)
+add_shortcode('display_product_producer', 'producer_product_tab_content');
+function producer_product_tab_content() { ?>
+
+        <?php echo get_field( "producer", $post->ID ); ?>
+
+<?php
+}
+// Add content to custom tab in product single pages (1)
+add_shortcode('display_product_production_process', 'production_process_product_tab_content');
+function production_process_product_tab_content() { ?>
+
+        <?php echo get_field( "production_process", $post->ID ); ?>
+
+<?php
+}
+
+// Add content to custom tab in product single pages (1)
+add_shortcode('display_product_origin', 'origin_product_tab_content');
+function origin_product_tab_content() { ?>
+
+        <?php echo get_field( "origin", $post->ID ); ?>
+
+<?php
+}
+
+// Add content to custom tab in product single pages (1)
+add_shortcode('display_product_buddhas_potion', 'buddhas_potion_product_tab_content');
+function buddhas_potion_product_tab_content() { ?>
+
+        <?php echo get_field( "who_is_buddhas_potion_for", $post->ID ); ?>
+
+<?php
+}
+
+function widgetblock_theme_support() {
+    remove_theme_support( 'widgets-block-editor' );
+}
+add_action( 'after_setup_theme', 'widgetblock_theme_support' );
+
+
+

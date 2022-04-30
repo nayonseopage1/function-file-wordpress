@@ -1,0 +1,561 @@
+<?php 
+add_action( 'wp_enqueue_scripts', 'enqueue_child_theme_styles');
+function enqueue_child_theme_styles() {
+  wp_enqueue_style( 'Parents_theme_style', get_template_directory_uri().'/style.css' );
+}
+
+add_filter( 'site_transient_update_plugins', 'remove_update_notifications' );
+function remove_update_notifications( $value ) {
+
+    if ( isset( $value ) && is_object( $value ) ) {
+        unset( $value->response[ 'elementor-pro/elementor-pro.php' ] );
+    }
+
+    return $value;
+}
+
+// Add mega menu script
+add_action('wp_head', 'cb_custom_script');
+  function cb_custom_script(){
+    ?>
+	<style>
+	@media(min-width: 768px){		
+		.backroundshodow {
+			display: none;
+		    position: fixed;
+		    top: 0%;
+		    left: 0%;
+		    width: 100%;
+		    height: 100%;
+		    background-color: #000;
+		    z-index: 900000;
+		    opacity: 0.6;
+			}	
+		.sidebar_menu_wrap {
+			display: block;
+			z-index:900001;
+		}
+		.sidebar_menu_wrap {
+   		 	display: block!important;
+			width: 270px !important;
+		}
+		.sidebar_menu_wrap {
+			top: 85px;
+			background-color: transparent;
+			position: relative;
+			margin-bottom: -36px;
+		}
+		.sticky-menu {
+			position: fixed;			
+			top: 65px;
+			width: 270px !important;
+			max-width: 1220px ; 
+		}
+		.sticky-menu .elementor-widget-container{
+			width: 270px !important;
+		}
+	}
+		@media(min-width: 1300px){
+		 .section-sticky .elementor-container {
+/* 			padding-right: 338px; */
+		  }
+		 .site-footer .site-primary-footer-wrap {
+/* 		  padding-right: 322px; */
+		 }
+	 } 
+	</style>
+		<script>
+			(function($){
+				$(document).ready(function ($) {
+					$(window).scroll(function() {    
+						var scroll = $(window).scrollTop();
+						if (scroll >= 200) {
+							$(".sidebar_menu_wrap").addClass("sticky-menu");
+						} else {
+							$(".sidebar_menu_wrap").removeClass("sticky-menu");
+						}
+					});						
+					
+					$(document).scroll(function(){
+						if($(this).scrollTop() >= $('footer').offset().top - 5) {							
+							$(".sidebar_menu_wrap").addClass("sticky");
+						} else {
+							$(".sidebar_menu_wrap").removeClass("sticky");
+						}
+					});
+					
+					$('.sidebar_menu_wrap').hover(function () {
+						$('.backroundshodow').css({ display: 'block' });
+					}, function () {
+						$('.backroundshodow').css({ display: 'none' });
+					});
+					
+					$( ".elementor-menu-toggle" ).click(function() {
+					  $('.top-menu').toggleClass("hemburger");
+					  $('.sidebar_menu_wrap').toggleClass("hemburger");
+					  $('nav').toggleClass("top-toggle");						
+					});
+					
+			    });
+			})(jQuery);
+		</script>
+	<?php 
+ }
+
+
+if ( ! function_exists( 'display_product_additional_information' ) ) {
+
+    function display_product_additional_information($atts) {
+
+        // Shortcode attribute (or argument)
+        $atts = shortcode_atts( array(
+            'id'    => ''
+        ), $atts, 'product_additional_information' );
+
+        // If the "id" argument is not defined, we try to get the post Id
+        if ( ! ( ! empty($atts['id']) && $atts['id'] > 0 ) ) {
+           $atts['id'] = get_the_id();
+        }
+
+        // We check that the "id" argument is a product id
+        if ( get_post_type($atts['id']) === 'product' ) {
+            $product = wc_get_product($atts['id']);
+        }
+        // If not we exit
+        else {
+            return;
+        }
+
+        ob_start(); // Start buffering
+
+        do_action( 'woocommerce_product_additional_information', $product );
+
+        return ob_get_clean(); // Return the buffered outpout
+    }
+
+    add_shortcode('product_additional_ifno', 'display_product_additional_information');
+
+}
+
+add_shortcode('display_products','get_product_grid_shortcode_init');
+function get_product_grid_shortcode_init($atts){
+
+	ob_start();
+	
+	$args = shortcode_atts(array(
+        'post_count' => '5',
+		'cat_name' => '',
+        ), $atts);
+    extract($args);
+
+
+    $args = array(
+       'post_type'      => 'product',
+       'posts_per_page' => $post_count,
+		'tax_query' => array(
+			'taxonomy' => 'product_cat',
+			'field' => 'term_id',
+			'terms' => $cat_name,
+		));
+    $product_query = new WP_Query( $args );
+	
+    ?>
+    <div class="shopBanner">
+        <div class="container">
+				<div class="row">		
+						<div class="product-inner">
+                        	<?php while ( $product_query->have_posts() ) : $product_query->the_post(); global $product, $post; ?>
+							<div class="woo-pd-col">
+                              <div class="col Product-content">
+								  <div class="woo-pd-top">  
+									  <div class="woo-pd-discount">
+                                    <?php 
+									if ( ! $product->is_type( 'variable' )  && $product->is_on_sale() ):
+									$percentage = round( ( ( $product->regular_price - $product->sale_price ) / $product->regular_price ) * 100 );
+									echo '<div class="salebatch">'.$percentage.'%</div>';
+								 //else:
+									 //echo '<div class="salebatch black">הנחה</div>';
+								endif;
+									
+									?>
+                                    </div>
+									  <div class="woo-pd-category">משלוח חינם<?php
+									  //$terms =  get_the_terms( $post->ID, 'product_cat' );
+										//if ( $terms && ! is_wp_error( $terms ) ) {
+											//echo $terms[0]->name;
+										//} 
+									   ?></div>
+								  </div>
+								  <div class="woo-pd-image"> 
+                                  <?php
+								  if(has_post_thumbnail()){  
+									 $feature_thumb = wp_get_attachment_image_src(get_post_thumbnail_id(), 'mediaum');
+									 echo '<a href="'.get_permalink().'"><img src="'.$feature_thumb[0].'" title="'.get_the_title().'" /></a>';
+								 } 
+								  ?>
+								  
+								  </div>
+								  <div class="woo-pd-bottom"> 
+									  <div class="woo-pd-title">
+										   <span class="woo-pd-sku"><?php echo esc_html( 'מק"ט: ', 'woocommerce' ); ?> <?php echo $product->get_sku(); ?></span>
+                                           <?php  //$limit_title=substr(get_the_title(), 0, 30); ?>
+								    </div>
+									  <div class="woo-pd-price">
+										  <?php echo $product->get_price_html(); ?>  
+										  <span class="instock_custom"> במלאי</span>
+									  </div>
+	
+								  </div>
+                                  
+                                  <h2 class="home_title"><a href="<?php echo get_permalink(); ?>"><?php echo get_the_title(); ?></a></h2>
+								  
+								<div class="product_button_wrap">
+                                     <?php  
+									 if( $product->is_type( 'simple' ) ){
+									 echo do_shortcode('[add_to_cart show_price="false" id="'.$post->ID.'"]'); ?>	  
+								  <?php
+										$current_product_id = get_the_ID();
+										$product = wc_get_product( $current_product_id );
+										$checkout_url = wc_get_checkout_url();
+										
+										echo '<p class="product woocommerce add_to_cart_inline"><a href="'.$checkout_url.'?add-to-cart='.$current_product_id.'" class="buy-now button">'.esc_html__( 'קנה עכשיו', 'woocommerce' ).'</a></p>';
+									} else{
+										echo '<p class="product woocommerce add_to_cart_inline"><a href="'.get_permalink().'" class="button">הוסף לעגלה</a></p>';
+									}						  							
+								  ?>
+                                  </div>
+                                 
+                              </div>
+							</div>
+                        <?php endwhile; ?>
+ 
+				</div>
+			</div>
+        </div>
+    </div>
+	<?php
+	$output = ob_get_clean();
+	return $output;
+}
+
+add_shortcode('display_featued_product', 'get_featued_product_shortcode_init');
+function get_featued_product_shortcode_init(){
+	ob_start();
+	$tax_query[] = array(
+    'taxonomy' => 'product_visibility',
+    'field'    => 'name',
+    'terms'    => 'featured',
+    'operator' => 'IN', // or 'NOT IN' to exclude feature products
+);
+
+   // The query
+$product_query = new WP_Query( array(
+    'post_type'           => 'product',
+    'posts_per_page'      => '2',
+    'tax_query'           => $tax_query // <===
+) );
+	
+
+	?><ul class="featued_product"><?php
+	 while ( $product_query->have_posts() ) : $product_query->the_post(); 
+	 global $product, $post; 
+	 	echo '<li><h5><a href="'.get_permalink().'">'.get_the_title().'</a></h5>';
+	 	if(has_post_thumbnail()){  
+                 $feature_thumb = wp_get_attachment_image_src(get_post_thumbnail_id(), 'medium');
+                 echo '<a href="'.get_permalink().'"><img src="'.$feature_thumb[0].'" title="'.get_the_title().'" /></a>';
+		}
+		echo '<div class="price_featurd">'.$product->get_price_html().'</div>';
+	echo '</li>';
+	 endwhile;
+	 ?></ul><?php
+	 
+	 return ob_get_clean();
+}
+
+/*add_filter( 'woocommerce_sale_flash', 'add_percentage_to_sale_badge', 20, 3 );
+function add_percentage_to_sale_badge( $html, $post, $product ) {
+
+  if( $product->is_type('variable')){
+      $percentages = array();
+
+      // Get all variation prices
+      $prices = $product->get_variation_prices();
+
+      // Loop through variation prices
+      foreach( $prices['price'] as $key => $price ){
+          // Only on sale variations
+          if( $prices['regular_price'][$key] !== $price ){
+              // Calculate and set in the array the percentage for each variation on sale
+              $percentages[] = round( 100 - ( floatval($prices['sale_price'][$key]) / floatval($prices['regular_price'][$key]) * 100 ) );
+          }
+      }
+      // We keep the highest value
+      $percentage = max($percentages) . '%';
+
+  } elseif( $product->is_type('grouped') ){
+      $percentages = array();
+
+      // Get all variation prices
+      $children_ids = $product->get_children();
+
+      // Loop through variation prices
+      foreach( $children_ids as $child_id ){
+          $child_product = wc_get_product($child_id);
+
+          $regular_price = (float) $child_product->get_regular_price();
+          $sale_price    = (float) $child_product->get_sale_price();
+
+          if ( $sale_price != 0 || ! empty($sale_price) ) {
+              // Calculate and set in the array the percentage for each child on sale
+              $percentages[] = round(100 - ($sale_price / $regular_price * 100));
+          }
+      }
+      // We keep the highest value
+      $percentage = max($percentages) . '%';
+
+  } else {
+      $regular_price = (float) $product->get_regular_price();
+      $sale_price    = (float) $product->get_sale_price();
+
+      if ( $sale_price != 0 || ! empty($sale_price) ) {
+          $percentage    = round(100 - ($sale_price / $regular_price * 100)) . '%';
+      } else {
+          return $html;
+      }
+  }
+  return '<span class="onsale">' . $percentage . '</span>';
+}*/
+
+remove_action('woocommerce_shop_loop_item_title', 'woocommerce_template_loop_product_title', 10);
+
+remove_action('woocommerce_after_shop_loop_item', 'woocommerce_template_loop_add_to_cart', 10);
+
+add_action('woocommerce_after_shop_loop_item', 'get_product_custom_meta', 11);
+function get_product_custom_meta(){
+	global $product, $post ;
+	?>
+    	<div class="archive_product_inner">
+        	<div class="title_content_wrap">
+            	<div class="one_third">
+                	<?php echo $product->get_price_html(); ?> 
+                    <div class="instock_custom"> במלאי</div>
+                </div>
+                <div class="two_third">
+                	<div class="instock_item"><?php echo esc_html( 'מק"ט: ', 'woocommerce' ); ?> <?php echo $product->get_sku(); ?></div>
+                    
+                    <h4><a href="<?php echo get_permalink() ?>"><?php echo get_the_title(); ?></a></h4>
+                </div>
+            </div><!--.title_content_wrap-->
+            <div class="product_button_wrap">
+			 <?php  $id = $product->get_id(); echo do_shortcode('[add_to_cart show_price="false" id="'.$id.'"]'); ?>	  
+          <?php
+                $current_product_id = get_the_ID();
+                $product = wc_get_product( $current_product_id );
+                $checkout_url = wc_get_checkout_url();
+                if( $product->is_type( 'simple' ) ){
+                echo '<p class="product woocommerce add_to_cart_inline"><a href="'.$checkout_url.'?add-to-cart='.$current_product_id.'" class="buy-now button">'.esc_html__( 'קנה עכשיו', 'woocommerce' ).'</a></p>';
+                }							  							
+          ?>
+          </div><!--.product_button_wrap-->
+        </div><!--.archive_product_inner-->
+    <?php
+}
+
+remove_action('woocommerce_before_shop_loop_item_title', 'woocommerce_show_product_loop_sale_flash', 10);
+
+add_action('woocommerce_before_shop_loop_item', 'get_product_category_name', 5);
+function get_product_category_name(){
+	global $product;
+	if( $product->is_on_sale() ) {
+		?><div class="product_grid_top">
+		<div class="category_name">משלוח חינם
+				<?php 
+					//$terms =  get_the_terms( $post->ID, 'product_cat' );
+					//if ( $terms && ! is_wp_error( $terms ) ) {
+						//echo $terms[0]->name;
+					//} 
+				?>
+			</div>
+		
+		<?php	
+		if ( ! $product->is_type( 'variable' )  && $product->is_on_sale() ):
+		$percentage = round( ( ( $product->regular_price - $product->sale_price ) / $product->regular_price ) * 100 );
+		$output ='<div class="salebatch">'.$percentage.'%</div>';
+		//else:
+		//$output .='<div class="salebatch black"></div>';	
+		endif;
+		echo $output;
+		?>  </div> <?php
+   } else {
+	  ?>
+      	<div class="product_grid_top only_free_shiping">
+		<div class="category_name">משלוח חינם </div>
+        </div>
+      <?php 
+  }
+}
+
+
+add_action('woocommerce_before_single_product', 'woocommerce_template_single_title', 15);
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_title', 5);
+add_action('woocommerce_before_single_product', 'woocommerce_breadcrumb', 25);
+
+
+
+add_action('woocommerce_before_single_product', 'get_single_product_info', 30);
+function get_single_product_info(){
+	global  $product;
+	?>
+    	<div class="product_info_row">
+            <div class="socila_icon">
+            	<?php echo do_shortcode('[Sassy_Social_Share]'); ?>
+            </div>
+            <div class="product_sapcification">
+            	<ul>
+                	<?php 
+					$terms =  get_the_terms( $post->ID, 'product_cat' );
+					if ( $terms && ! is_wp_error( $terms ) ) {
+						echo '<li>קטגוריה: <span>'.$terms[0]->name.'</span> </li>';
+					 }  
+					?> 
+                	<?php if( $product->get_sku()): ?>
+                	<li>מק"ט: <span><?php echo $product->get_sku(); ?></span> </li>
+                    <?php endif; ?>
+                    <li class="freeshiping_batch"><span>משלוח חינם</span></li>                 
+                                
+                    
+                </ul>
+            </div>
+        </div>
+    <?php
+} 
+
+add_action('woocommerce_before_single_product_summary', 'get_product_sale_price', 15);
+function get_product_sale_price(){
+	global $product;
+	
+	?><!--<img class="free_shiping_batch" src="/wp-content/uploads/2021/08/free-shipping-icon.png" alt="" />-->
+		<div class="free_shiping_batch">משלוח חינם</div>
+	<?php
+	
+	if ( ! $product->is_type( 'variable' )  && $product->is_on_sale() ):
+    $percentage = round( ( ( $product->regular_price - $product->sale_price ) / $product->regular_price ) * 100 );
+    $output ='<div class="salebatch">'.$percentage.'%</div>';
+	echo $output;
+	endif;
+}
+
+add_action('woocommerce_single_product_summary', 'single_product_instock', 15);
+function single_product_instock(){
+	global $product;
+	if ($product->get_stock_status()):
+	echo '<div class="single_instock">במלאי</div>';
+	endif;
+	?>
+    	<div class="single_info_line_1">
+        	<?php the_excerpt(); ?>          
+            
+            <!--<h4 class="bundel_title">נקנים יחד לעתים קרובות</h4>-->
+        </div>
+    <?php
+}
+
+add_action('woocommerce_single_product_summary', 'singl_product_bynow_button', 35);
+function singl_product_bynow_button(){
+	$current_product_id = get_the_ID();
+                $product = wc_get_product( $current_product_id );
+                $checkout_url = wc_get_checkout_url();
+                if( $product->is_type( 'simple' ) || $product->is_type( 'variable' ) || $product->is_type( 'yith_bundle' ) ){
+                echo '<p class="product woocommerce add_to_cart_inline btn_single_buynow"><a href="'.$checkout_url.'?add-to-cart='.$current_product_id.'" class="buy-now button">'.esc_html__( 'קנה עכשיו', 'woocommerce' ).'</a></p>';
+                }					
+}
+
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40);
+add_action('woocommerce_single_product_summary', 'get_product_info_line_2', 45);
+function get_product_info_line_2(){
+	?>
+    	<div class="product_info_line_2">
+        	<ul class="clear list">
+            	<li>ניתן לשלם גם באמצעות <span class="paypal_letter">PayPal</span></li>
+                <li>מוצרים מקוריים בלבד</li>
+            </ul>
+            
+            <div class="product_info_line_3 clear" style="padding-bottom:32px;">
+                <ul>
+                <li><img src="/wp-content/uploads/2021/09/icon-1.jpg" alt="" /><h6>המחירים הזולים ביותר</h6></li>
+                                
+                
+                <li><img src="/wp-content/uploads/2021/09/icon-3.jpg" alt="" /><h6>התקנות עד בית הלקוח</h6></li>
+                <li><img src="/wp-content/uploads/2021/09/icon-2.jpg" alt="" /><h6>תשלום מאובטח</h6></li>
+                
+
+                </ul>
+        </div>
+            
+            <div class="sinlge_shiping_box">
+            	<h5><img src="/wp-content/uploads/2021/09/shipping-icon-2.png" />משלוחים מהירים לכל הארץ עד 7 ימי עסקים</h5>
+                <p>משלוח מהיר וחינם לכל הארץ עד 7 ימי עסקים.
+בדרך כלל ההזמנות מועברות תוך ימים בודדים ואנחנו עושים הכל כדי לספק אותן בזמן המהיר ביותר</p>
+            </div>
+        </div>
+        
+        
+    <?php 
+}
+
+
+//add_action('woocommerce_before_single_product_summary', 'product_info_line_3', 25);
+function product_info_line_3(){
+	?>
+    	<div class="product_info_line_3 clear d-sm-none">
+            <ul>
+            <li><img src="/wp-content/uploads/2021/08/shipping-icon-03.png" alt="" /></li>
+            <li><img src="/wp-content/uploads/2021/08/shipping-icon-02.png" alt="" /></li>
+            	<li><img src="/wp-content/uploads/2021/08/shipping-icon-01.png" alt="" /></li>
+            </ul>
+        </div>
+    <?php
+}
+
+add_shortcode('display_product_contetn', 'get_product_contetn_shortcode_init');
+function get_product_contetn_shortcode_init(){
+	ob_start();
+		the_content();
+	$output = ob_get_clean();
+	return $output;
+}
+
+add_shortcode('display_product_shortdescription', 'get_product_shortdescription_shortcode_init');
+function get_product_shortdescription_shortcode_init(){
+	ob_start();
+		the_content();
+	$output = ob_get_clean();
+	return $output;
+}
+
+remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10);
+
+add_action('woocommerce_after_single_product_summary', 'get_single_product_custom_tabs', 12);
+function get_single_product_custom_tabs(){
+	echo do_shortcode('[elementor-template id="10352"]');
+}
+
+
+
+remove_action('woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20);
+
+remove_action('woocommerce_before_main_content', 'woocommerce_breadcrumb', 20);
+
+
+add_action('woocommerce_before_main_content', 'get_search_title', 35);
+function get_search_title(){
+	if ( is_search() ) {
+	?><h2 class="search_title"><?php printf( esc_html__( '%s', 'astra' ), '<span>' . get_search_query() . '</span>' ); ?></h2><?php
+	}
+	
+	 if( is_shop() ) :
+	 	echo '<h2 class="search_title shop_title">חנות</h2>';
+	 endif;
+}
+
+
