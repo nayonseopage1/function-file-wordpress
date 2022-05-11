@@ -1,0 +1,68 @@
+<?php 
+add_action( 'wp_enqueue_scripts', 'enqueue_child_theme_styles');
+function enqueue_child_theme_styles() {
+  wp_enqueue_style( 'Parents_theme_style', get_template_directory_uri().'/style.css' );
+}
+
+add_filter( 'site_transient_update_plugins', 'remove_update_notifications' );
+function remove_update_notifications( $value ) {
+
+    if ( isset( $value ) && is_object( $value ) ) {
+        unset( $value->response[ 'elementor-pro/elementor-pro.php' ] );
+    }
+
+    return $value;
+}
+
+function cc_mime_types($mimes) {
+ $mimes['svg'] = 'image/svg+xml';
+ return $mimes;
+}
+add_filter('upload_mimes', 'cc_mime_types');
+
+
+add_action( 'woocommerce_after_shop_loop_item', 'cssigniter_buy_now_button', 15 );
+add_action( 'woocommerce_after_add_to_cart_button', 'cssigniter_buy_now_button' );
+function cssigniter_buy_now_button() {
+	global $product;
+	
+	$id = $product->get_ID();
+
+	$classes = implode(
+		' ',
+		array_filter(
+			array(
+				'button',
+				'product_type_' . $product->get_type(),
+				'add_to_cart_button',
+			)
+		)
+	);
+
+	ob_start();
+
+	?>
+		<a
+		href="<?php echo esc_url( wc_get_checkout_url() ); ?>?add-to-cart=<?php echo absint( $id ); ?>"
+		class="<?php echo esc_attr( $classes ); ?> buy-now-buttoon"
+		rel="nofollow">
+		<?php echo esc_html_e( 'Buy Now', 'woocommerce' ); ?>
+		</a>
+	<?php
+
+	echo ob_get_clean();
+}
+function remove_link_title_product() {
+?>
+<script>
+jQuery(document).ready(function(){
+	jQuery(function($){
+        $(".prd-cat-area .astra-shop-summary-wrap a").removeAttr("href");
+	});
+});
+</script>
+<?php
+}
+add_action('wp_footer', 'remove_link_title_product');
+
+
