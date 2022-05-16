@@ -1,0 +1,14 @@
+function accordion_toggle_myscript() {
+?>
+<script>
+jQuery(document).ready(function(){
+	jQuery(function($){
+		var delay = 100; setTimeout(function() { 
+		$('.elementor-tab-title').removeClass('elementor-active');
+		 $('.elementor-tab-content').css('display', 'none'); }, delay); 
+	});
+});
+</script>
+<?php
+}
+add_action('wp_footer', 'accordion_toggle_myscript');

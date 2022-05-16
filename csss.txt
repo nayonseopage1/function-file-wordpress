@@ -1,0 +1,6 @@
+
+image color black
+
+.socialicon {
+    filter: invert(10);
+}
