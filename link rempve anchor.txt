@@ -1,0 +1,12 @@
+function remove_link_title_product() {
+?>
+<script>
+jQuery(document).ready(function(){
+	jQuery(function($){
+       		 $(".prd-cat-area .astra-shop-summary-wrap a").removeAttr("href");
+	});
+});
+</script>
+<?php
+}
+add_action('wp_footer', 'remove_link_title_product');
