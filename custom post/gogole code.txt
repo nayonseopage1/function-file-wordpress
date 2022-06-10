@@ -1,0 +1,38 @@
+add_action( 'init', 'create_news' );
+function create_news ()
+{      
+    register_post_type( 'sota_slider',
+                array(
+                'labels'        => array(
+                'name'          => __( 'Sota Slider' ),
+                'singular_name' => __( 'Sota Slider' )
+                ),
+                'public'   => true,
+                'supports' => array ('title', 'editor', 'thumbnail')
+                )
+                );
+
+    register_taxonomy(
+                'sota_slider_cat',
+                'sota_slider',
+                array(
+                'labels' => array(
+                'name' => 'Sota Slider Categories',
+                'add_new_item' => 'Add New Sota Slider Category',
+                'new_item_name' => "New Sota Slider Category"
+                ),
+                'show_ui' => true,
+                'show_tagcloud' => false,
+                'hierarchical' => true,
+                'hasArchive' => true
+                )
+            );
+
+    }
+
+    if ( function_exists( 'add_theme_support' ) ) {
+    add_theme_support( 'post-thumbnails' );
+    set_post_thumbnail_size( 100, 100, true ); 
+}
+
+    ?>
