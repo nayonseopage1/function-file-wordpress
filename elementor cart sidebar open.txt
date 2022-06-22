@@ -1,0 +1,45 @@
+jQuery(document).ready(function ($) {
+    $(".elementor-menu-cart__close-button").attr("id", "close_btn");
+	$(".elementor-menu-cart__container.elementor-lightbox").attr("id", "cart_sidebar");
+    $(".e-atc-qty-button-holder button").click(function () {
+        $(".elementor-widget-woocommerce-menu-cart").removeClass("elementor-menu-cart--shown");
+        $(this).addClass("elementor-menu-cart--shown");
+        localStorage.ClassName = "elementor-menu-cart--shown";
+    });	
+	
+	$(document).ready(function () {
+       SetClass();
+    });
+	
+    function SetClass() {
+      $(".elementor-widget-woocommerce-menu-cart").addClass(localStorage.ClassName);
+    }
+	
+    document.getElementById("close_btn").onclick = clear_me;
+    function clear_me() {
+        localStorage.clear();		
+    }
+	
+   $(".elementor-menu-cart__close-button").click(function () {
+        $(".elementor-menu-cart__container").css("display", "none");
+	  	location.reload();
+
+        // 		var header = $('.elementor-widget-woocommerce-menu-cart');
+        // 		console.log('added');
+        // // 		header.addClass('notify-hide');
+        // 		setTimeout(function() {
+        // 			console.log('added');
+        // 			header.addClass('elementor-menu-cart--shown');
+        // 		}, 4000);
+    });	
+	
+// 	$(document).click(function() {
+// 		let container = $("#cart_sidebar");
+// 		if (!container.is(event.target) && !container.has(event.target).length) {
+// 			container.hide();
+// 		}
+// 	});
+
+  
+});
+

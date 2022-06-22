@@ -1,0 +1,4 @@
+.elementor-widget-woocommerce-menu-cart.toggle-icon--bag-solid .elementor-menu-cart__toggle .elementor-button-icon i:before {
+    content: url(https://escooterssus.com/wp-content/uploads/2022/05/ssfcdfv.png) !important;
+    filter: invert(10);
+}

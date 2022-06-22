@@ -1,0 +1,45 @@
+.woocommerce .cart .button.alt.single_add_to_cart_button .icon:before, .woocommerce div.products div.product a.product_type_simple .icon:before{
+    color:#fff !important;
+}
+
+.woocommerce div.products div.product:not(.dark) span.product-button:hover .txt{
+	color:#fff !important
+}
+
+.single-product.woocommerce div.product .product_title{
+	color:#000 !important;
+	font-size: 32px !important;
+}
+
+.single-product .product .summary .price .amount{
+	font-size:24px !important;
+	font-weight:600 !important
+}
+
+.single-product .product .socialshare-container {
+    margin-top: -5px;
+    padding-top: 0;
+}
+
+.single-product.woocommerce div.product form.cart{
+	padding-top:20px !important;
+	color:white !important
+}
+
+.woocommerce .cart .button.alt.single_add_to_cart_button .txt{
+	color:#fff !important
+}
+
+.single-product .pd_classic .priceminheight{
+	margin-top:0
+}
+
+.single-product.woocommerce-page div.product.seperate_rows_wishlist_compare .single_add_to_cart_button{
+	font-size:15px !important
+}
+
+.cart-bottom-box .button.checkout span{
+	color:#fff !important
+}
+
+

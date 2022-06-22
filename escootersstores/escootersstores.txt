@@ -1,0 +1,500 @@
+<?php 
+add_filter( 'site_transient_update_plugins', 'remove_update_notifications' );
+function remove_update_notifications( $value ) {
+
+    if ( isset( $value ) && is_object( $value ) ) {
+        unset( $value->response[ 'elementor-pro/elementor-pro.php' ] );
+    }
+
+    return $value;
+}
+
+add_action( 'wp_enqueue_scripts', 'enqueue_child_theme_styles');
+function enqueue_child_theme_styles() {
+  wp_enqueue_style( 'Parents_theme_style', get_template_directory_uri().'/style.css' );
+  wp_enqueue_style( 'owl_maincss', get_stylesheet_directory_uri().'/assets/owl.carousel.min.css',array(),'2.3.4' );
+  wp_enqueue_script( 'owl_mainjs', get_stylesheet_directory_uri().'/assets/owl.carousel.min.js',array( 'jquery' ),'2.3.4');
+}
+
+function footer_slider_area() {
+?>
+<script type="text/javascript">
+(function($){
+  jQuery(document).ready(function(){
+
+	  $('.owl-carousel').owlCarousel({
+		loop:true,
+		autoplay: false,
+		nav:true,
+		dots: false,
+		animateIn: 'fadeIn',
+		animateOut: 'fadeOut',
+		margin:20,
+		responsive:{
+		  0:{
+			items:1
+		  },
+		  600:{
+			items:1
+		  },
+		  1000:{
+			items:4
+		  }
+		}
+	  })
+  
+});
+})(jQuery);
+	
+</script>
+<?php
+}
+add_action( 'wp_footer', 'footer_slider_area' );
+
+add_shortcode('woocommerce_rating', 'roo_stars_shortcode');
+function better_woocommerce_stars_shortcode_css(){ ?>
+
+<style>
+i.display-rating-value, i.display-number-of-ratings {float:right; color:black; font-size:.75em; font-style:normal;}
+
+.star-rating {float:left;}
+
+.star-rating {float:left;}
+
+.starwrapper:after {content:"";display:table;clear:both;}
+
+#reviews .comment .star-rating {
+    float: none;
+    font-size: 1em;
+    margin: 0;
+    position: absolute;
+    top: 2px;
+    right: 20px;
+}
+.star-rating {
+    overflow: hidden;
+    height: 1em;
+    line-height: 1em;
+    font-size: 1em;
+    font-family: star !important;
+    position: relative;
+}
+.star-rating:before {
+    content: '\53\53\53\53\53';
+    float: left;
+    top: 0;
+    left: 0;
+    letter-spacing: 0.1em;
+    letter-spacing: 0\9;
+    color: gray;
+}
+
+.star-rating span {
+    overflow: hidden;
+    float: left;
+    top: 0;
+    left: 0;
+    position: absolute;
+    padding-top: 1.5em;
+}
+.star-rating span:before {
+    content: '\53\53\53\53\53';
+    top: 0;
+    position: absolute;
+    left: 0;
+    letter-spacing: 0.1em;
+    letter-spacing: 0\9;
+    color: #fcb813;
+}
+</style>
+<?php } 
+
+function roo_stars_shortcode($atts){ 
+	global $post;
+
+    extract(shortcode_atts(array(  
+        "id" => $post->ID, 
+		"link" => 'true', 
+		"newwindow" => 'false', 
+		"alttext" => "",
+		"displayaverage" => 'false',
+		"displaycount" => 'true'
+    ), $atts)); 
+
+	$newwindow = !($newwindow === 'false'); // open in a new window unless newwindow is equal to false
+
+	if($link==='true'||$link==='false'){//if it isn't true or false, we want to leave it as a string
+		$link = ($link === 'true');
+	}
+
+	if(get_post_type($id)=='product'){
+		ob_start();
+		roo_print_stars($id, $link, $newwindow, $alttext);
+		return ob_get_clean();
+	}else{
+		return "";
+	}
+
+}
+
+function roo_print_stars($id="", $permalink=false, $newwindow=true, $alttext = "" ){
+    global $wpdb;
+    global $post;
+
+	if(empty($id)){
+		$id=$post->ID;
+	}
+
+	if(empty($alttext)){
+		$alttext="Be the first to rate ". get_the_title( $id );
+	}
+
+	if(is_bool($permalink)){
+		if($permalink){
+			$link = get_permalink( $id );
+		}		
+	}else{
+		$link = $permalink;
+		$permalink = true;
+	}
+
+	$target = "";		 
+	if($newwindow == 'true'){
+		$target="target='_blank' ";
+	}	
+
+	if(get_post_type( $id )=='product'){	
+		$count = $wpdb->get_var("
+			SELECT COUNT(meta_value) FROM $wpdb->commentmeta
+			LEFT JOIN $wpdb->comments ON $wpdb->commentmeta.comment_id = $wpdb->comments.comment_ID
+			WHERE meta_key = 'rating'
+			AND comment_post_ID = $id
+			AND comment_approved = '1'
+			AND meta_value > 0
+		");
+
+		$rating = $wpdb->get_var("
+			SELECT SUM(meta_value) FROM $wpdb->commentmeta
+			LEFT JOIN $wpdb->comments ON $wpdb->commentmeta.comment_id = $wpdb->comments.comment_ID
+			WHERE meta_key = 'rating'
+			AND comment_post_ID = $id
+			AND comment_approved = '1'
+		");
+
+		if($permalink){
+			echo "<a href='{$link}'  {$target} >";
+		}
+
+		echo '<span style="display:inline-block;float:none;" class="starwrapper" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
+
+		if ( $count > 0 ) {
+			$average = number_format($rating / $count, 2);
+			if ($displayaverage == 'true') {
+				$averagedigit = '<i title="average rating" class="display-rating-value">( '.$average.' )</i>';
+			}
+			if ($displaycount != 'false') {
+				$totalcomments = '<i title="total number of comments" class="display-number-of-ratings">( '.$count.' )</i>';
+			}
+
+			echo '<div class="star-rating"><span style="width:'.( ( $average / 5 ) * 100 ) . '%"><strong itemprop="ratingValue" class="rating">'.$average.'</strong> '.__( 'out of 5', 'woocommerce' ).'</span></div>';
+
+		}
+
+		echo $averagedigit.' '.$totalcomments.'</span>';
+
+		if($permalink){
+			echo "</a>";
+		}
+		add_action('wp_footer', 'better_woocommerce_stars_shortcode_css');
+	}
+
+}
+
+add_shortcode('display-featured-product-carousel','product_featured_carousel_shortcode_area');
+function product_featured_carousel_shortcode_area($atts){
+		ob_start();
+	
+		$atts = shortcode_atts( array (
+			'type' => 'product',
+			'posts' => -1,
+			'order' => 'ASC',
+		), $atts );
+		$query = new WP_Query( array(
+			'post_type' => $atts['type'],
+			'posts_per_page' => $atts['posts'],
+			'order' => $atts['order'],
+			'tax_query' => array( array(
+				'taxonomy' => 'product_visibility',
+				'field'    => 'name',
+				'terms'    => 'featured',
+				'operator' => 'IN'
+			) ),
+		));
+		?>
+		<div class="owl-carousel owl-theme woo-product-area">
+			<?php while ( $query->have_posts() ) : $query->the_post(); global $product,$woocommerce,$post;  ?>
+			<?php  $id = $product->get_id(); ?>
+			<div class="item woo-product-content-area">
+					<div class="woo-pd-image">
+						<?php
+						if(has_post_thumbnail()){  
+							$feature_thumb = wp_get_attachment_image_src(get_post_thumbnail_id(), 'mediaum');
+							echo '<a href="'.get_permalink().'"><img src="'.$feature_thumb[0].'" title="'.get_the_title().'" /></a>';
+						} 
+						?>
+					</div>
+					<h2 class="woo-pd-title"><a href="<?php echo get_permalink(); ?>"><?php echo get_the_title(); ?></a></h2>
+					<div class="woo-rating-area">	
+			        	<?php  echo do_shortcode( '[woocommerce_rating id="' . $id . '"]'); ?>			
+					</div>
+					<div class="review-price-area">	
+						<div class="woo-pd-price"> <?php echo $product->get_price_html(); ?> </div>
+						<div class="woo-addtocart-button">
+						<?php  
+							echo do_shortcode('[add_to_cart show_price="false" id="'.$post->ID.'"]'); 	  						  							
+						?>
+                    </div>
+					</div>
+			</div>
+				<?php endwhile;
+				wp_reset_query(); ?>
+		</div>
+		<?php
+		return ob_get_clean(); 
+	}
+
+add_shortcode('display-onsale-product-carousel','product_onsale_carousel_shortcode_area');
+function product_onsale_carousel_shortcode_area($atts){
+		ob_start();
+	
+		$atts = shortcode_atts( array (
+			'type' => 'product',
+			'posts' => -1,
+			'order' => 'ASC',
+			'category' => '', 
+		), $atts );
+		$query = new WP_Query( array(
+			'post_type' => $atts['type'],
+			'posts_per_page' => $atts['posts'],
+			'order' => $atts['order'],
+			'tax_query' => array( array(
+					'taxonomy' => 'product_cat',
+					'field' => 'slug',
+					'terms' => $atts['category'],
+			) ),
+		));	
+	
+		?>
+		<div class="owl-carousel owl-theme woo-product-area">
+			<?php while ( $query->have_posts() ) : $query->the_post(); global $product,$woocommerce,$post;  ?>
+			<?php  $id = $product->get_id(); ?>
+			<div class="item woo-product-content-area">
+					<div class="woo-pd-image">
+						<?php
+						if(has_post_thumbnail()){  
+							$feature_thumb = wp_get_attachment_image_src(get_post_thumbnail_id(), 'mediaum');
+							echo '<a href="'.get_permalink().'"><img src="'.$feature_thumb[0].'" title="'.get_the_title().'" /></a>';
+						} 
+						?>
+					</div>
+					<h2 class="woo-vendor-title">E-Scooters</h2>
+					<h2 class="woo-pd-title"><a href="<?php echo get_permalink(); ?>"><?php echo get_the_title(); ?></a></h2>
+					<div class="woo-rating-area">	
+			        	<?php  echo do_shortcode( '[woocommerce_rating id="' . $id . '"]'); ?>			
+					</div>
+					<div class="review-price-area">	
+						<div class="woo-pd-price"> <?php echo $product->get_price_html(); ?> </div>
+						<div class="woo-addtocart-button">
+						<?php  
+							echo do_shortcode('[add_to_cart show_price="false" id="'.$post->ID.'"]'); 	  						  							
+						?>
+                    </div>
+					</div>
+			</div>
+				<?php endwhile;
+				wp_reset_query(); ?>
+		</div>
+		<?php
+		return ob_get_clean(); 
+	}
+
+add_action( 'woocommerce_after_shop_loop_item', 'cssigniter_buy_now_button', 15 );
+add_action( 'woocommerce_after_add_to_cart_button', 'cssigniter_buy_now_button' );
+function cssigniter_buy_now_button() {
+	global $product;
+	
+	$id = $product->get_ID();
+
+	$classes = implode(
+		' ',
+		array_filter(
+			array(
+				'button',
+				'product_type_' . $product->get_type(),
+				'add_to_cart_button',
+			)
+		)
+	);
+
+	ob_start();
+
+	?>
+		<a
+		href="<?php echo esc_url( wc_get_checkout_url() ); ?>?add-to-cart=<?php echo absint( $id ); ?>"
+		class="<?php echo esc_attr( $classes ); ?> buy-now-buttoon"
+		rel="nofollow">
+		<?php echo esc_html_e( 'BUY IT NOW', 'woocommerce' ); ?>
+		</a>
+	<?php
+
+	echo ob_get_clean();
+}
+
+add_shortcode('display_product_specification', 'product_specification_product_tab_content');
+function product_specification_product_tab_content() { ?>
+        <?php echo get_field( "product_specification", $post->ID ); ?>
+<?php
+}
+
+add_shortcode('display_product_more_information', 'product_more_information_tab_content');
+function product_more_information_tab_content() { ?>
+        <?php echo get_field( "product_more_information", $post->ID ); ?>
+<?php
+}
+
+
+add_filter( 'woocommerce_product_tabs', 'woo_custom_product_tabs' );
+function woo_custom_product_tabs( $tabs ) {
+	
+    // unset( $tabs['description'] );              
+    // unset( $tabs['reviews'] );               
+    unset( $tabs['additional_information'] );
+	
+    $tabs['description']['title'] = __( 'OVERVIEW', 'woocommerce' );
+    //Attribute Description tab
+    $tabs['attrib_desc_tab'] = array(
+        'title'     => __( 'DESCRIPTION', 'woocommerce' ),
+        'priority'  => 10,
+        'callback'  => 'woo_attrib_desc_tab_content'
+    );
+	
+    // Adds the qty pricing  tab
+    $tabs['qty_pricing_tab'] = array(
+        'title'     => __( 'DOWNLOAD', 'woocommerce' ),
+        'priority'  => 20,
+        'callback'  => 'woo_product_user_manual_tab_content'
+    );
+
+    return $tabs;
+
+}
+
+function woo_attrib_desc_tab_content() {
+ 	echo get_field( "product_description", $post->ID );
+}
+function woo_product_user_manual_tab_content() {
+$link = get_field('product_user_manual');
+if( $link ): ?>
+    <a target="_blank" class="download-btn-area" href="<?php echo esc_url( $link ); ?>">
+		<img src="https://escootersstores.internaltest.website/wp-content/uploads/2022/04/Download-01-1.webp">
+		User Manual</a>
+<?php endif;
+}
+add_filter('woocommerce_get_catalog_ordering_args', 'am_woocommerce_catalog_orderby');
+function am_woocommerce_catalog_orderby( $args ) {
+$args['meta_key'] = '';
+$args['orderby'] = 'date';
+$args['order'] = 'DESC';
+return $args;
+}
+
+add_shortcode('display_product_sale_badge', 'sale_badge_fun_area');
+function sale_badge_fun_area() { 
+    global $product;
+   if ( ! $product->is_on_sale() ) return;
+   if ( $product->is_type( 'simple' ) ) {
+      $max_percentage = ( ( $product->get_regular_price() - $product->get_sale_price() ) / $product->get_regular_price() ) * 100;
+   } elseif ( $product->is_type( 'variable' ) ) {
+      $max_percentage = 0;
+      foreach ( $product->get_children() as $child_id ) {
+         $variation = wc_get_product( $child_id );
+         $price = $variation->get_regular_price();
+         $sale = $variation->get_sale_price();
+         if ( $price != 0 && ! empty( $sale ) ) $percentage = ( $price - $sale ) / $price * 100;
+         if ( $percentage > $max_percentage ) {
+            $max_percentage = $percentage;
+         }
+      }
+   }
+   if ( $max_percentage > 0 ) echo "<span class='onsale'>-" . round($max_percentage) . "%</span>"; // If you would like to show -40% off then add text after % sign
+}
+
+add_shortcode('display_product_sale_badge_image', 'sale_badge_fun_area_image');
+function sale_badge_fun_area_image() { 
+    global $product;
+   if ( ! $product->is_on_sale() ) return;
+	?>
+	<img src="https://escooterssus.com/wp-content/uploads/2022/05/sale5.png" >
+	<?php
+}
+
+function wc_billing_field_strings( $translated_text, $text, $domain ) {
+    switch ( $translated_text ) {
+        case 'Billing details' :
+            $translated_text = __( 'Shipping Details', 'woocommerce' );
+            break;
+    }
+    return $translated_text;
+}
+//add_filter( 'gettext', 'wc_billing_field_strings', 20, 3 );
+
+add_action( 'woocommerce_after_quantity_input_field', 'bbloomer_display_quantity_plus' );
+  
+function bbloomer_display_quantity_plus() {
+   echo '<button type="button" class="plus quantity-plus-btn">+</button>';
+}
+  
+add_action( 'woocommerce_before_quantity_input_field', 'bbloomer_display_quantity_minus' );
+  
+function bbloomer_display_quantity_minus() {
+   echo '<button type="button" class="minus quantity-minus-btn">-</button>';
+}
+  
+// -------------
+// 2. Trigger update quantity script
+  
+add_action( 'wp_footer', 'bbloomer_add_cart_quantity_plus_minus' );
+  
+function bbloomer_add_cart_quantity_plus_minus() {
+ 
+   if ( ! is_product() && ! is_cart() ) return;
+    
+   wc_enqueue_js( "   
+           
+      $(document).on( 'click', 'button.plus, button.minus', function() {
+  
+         var qty = $( this ).parent( '.quantity' ).find( '.qty' );
+         var val = parseFloat(qty.val());
+         var max = parseFloat(qty.attr( 'max' ));
+         var min = parseFloat(qty.attr( 'min' ));
+         var step = parseFloat(qty.attr( 'step' ));
+ 
+         if ( $( this ).is( '.plus' ) ) {
+            if ( max && ( max <= val ) ) {
+               qty.val( max ).change();
+            } else {
+               qty.val( val + step ).change();
+            }
+         } else {
+            if ( min && ( min >= val ) ) {
+               qty.val( min ).change();
+            } else if ( val > 1 ) {
+               qty.val( val - step ).change();
+            }
+         }
+ 
+      });
+        
+   " );
+}
+
