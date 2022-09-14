@@ -1,0 +1,37 @@
+{%- style -%}
+  .empfohlen { padding: 100px 0;background: #029E9B; }
+  .empfohlen-block h2 { font-family: 'Roboto Condensed';font-style: normal;font-weight: 700;font-size: 52px;line-height: 73px;color: #F8FBFF;margin-bottom:30px }
+  .empfohlen-block p { font-family: 'Roboto';font-style: normal;font-weight: 700;font-size: 18px;line-height: 25px;color: rgba(248, 251, 255, 0.8); }
+  @media screen and (min-width: 750px) {
+    
+  }
+{%- endstyle -%}
+
+<div class="empfohlen">
+	<div class="container">
+		<div class="row">
+
+			<div class="col-md-12">
+              <div class="empfohlen-block">
+                	<h2>Empfohlen wird ein Monitoring der Infektionsdynamik durch eine „wöchentliche Erhebung der Testpositivquote von SARS-CoV-2, Influenza und RSV“.</h2>
+                	<p>Aus der Stellungnahme des ExpertInnenrates der Bundesregierung zu COVID-19 vom 08.06.2022</p>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.empfohlen.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+  ],
+  "presets": [
+    {
+      "name": "t:sections.empfohlen.presets.name"
+    }
+  ]
+}
+{% endschema %}

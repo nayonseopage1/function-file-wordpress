@@ -1,0 +1,86 @@
+{%- style -%}
+  .der-enizige-product { background: #9DD8FA;padding: 100px 0; }
+  .content-der-enizige h2 { font-weight: 700;font-size: 52px;line-height: 73px;color: #F8FBFF;font-family: "Roboto Condensed", sans-serif;margin-bottom: 30px; }
+  .content-den-enizige-media { margin-bottom: 30px; }
+  .content-den-enizige-media h3 { font-weight: 600;font-size: 28px;line-height: 24px;color: #F8FBFF;padding-bottom: 5px; }
+  .content-den-enizige-media p { font-weight: 400; font-size: 18px; line-height: 25px; color: rgba(248, 251, 255, 0.8);margin-bottom: 0; }
+  .content-den-enizige-media img { margin-right: 22px; }
+  
+  @media screen and (min-width: 750px) {
+    
+  }
+  @media only screen and (max-width: 979px) and (min-width: 769px)  {
+    .content-der-enizige { padding-right: 0; }
+    .bg-content { padding-right: 20px !important; }
+    .content-der-enizige h2 { font-size: 34px !important;line-height: 44px !important; }    
+  }
+
+    @media only screen and (min-width: 1401px)  {
+      .content-der-enizige h2 {font-size: 46px;line-height: 56px }
+  }
+  
+  @media only screen and (max-width: 1400px)  {
+
+    .content-der-enizige h2 {font-size: 38px;line-height: 52px }
+  }
+  @media only screen and (min-width: 1900px)  {
+  }
+  
+{%- endstyle -%}
+
+<div class="der-enizige-product">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 bg-image d-flex align-items-center">
+				<div class="content-der-enizige">
+					<h2>Der einzige Test seiner Art mit Zertifizierung zur Selbstanwendung.</h2>
+				</div>
+			</div>
+			<div class="col-md-6 bg-content">				
+                <div class="d-flex align-items-start content-den-enizige-media">
+					<img src="https://cdn.shopify.com/s/files/1/0660/8948/4515/files/Vector.png?v=1662447443" alt="">
+					<div class="media-body">
+						<h3>Brand Neu</h3>
+						<p>Der erste Test auf dem europäischen Markt</p>
+					</div>
+				</div>
+                <div class="d-flex align-items-start content-den-enizige-media">
+					<img src="https://cdn.shopify.com/s/files/1/0660/8948/4515/files/einfetch.png?v=1662449072" alt="">
+					<div class="media-body">
+						<h3>Einfach selber testen</h3>
+						<p>Genauso einfach wie herkömmliche COVID-Tests</p>
+					</div>
+				</div>
+                <div class="d-flex align-items-start content-den-enizige-media">
+					<img src="https://cdn.shopify.com/s/files/1/0660/8948/4515/files/kosten.png?v=1662449309" alt="">
+					<div class="media-body">
+						<h3>Kostengünstig</h3>
+						<p>Nicht teuer als herkömmliche Corona-Tests.</p>
+					</div>
+				</div>
+                <div class="d-flex align-items-start content-den-enizige-media">
+					<img src="https://cdn.shopify.com/s/files/1/0660/8948/4515/files/nur.png?v=1662449318" alt="">
+					<div class="media-body">
+						<h3>Nur hier</h3>
+						<p>Wir sind der Exklusiv-Anbieter für Europa.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.der-product.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+  ],
+  "presets": [
+    {
+      "name": "t:sections.der-product.presets.name"
+    }
+  ]
+}
+{% endschema %}
